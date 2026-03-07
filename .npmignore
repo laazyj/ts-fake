@@ -1,0 +1,31 @@
+# Source files
+src/
+
+# Tests
+tests/
+*.test.ts
+*.spec.ts
+
+# Examples
+examples/
+
+# Configuration
+tsconfig.json
+.github/
+.gitignore
+.npmignore
+
+# Development
+node_modules/
+coverage/
+
+# Build artifacts (already in .gitignore but explicit here)
+*.tsbuildinfo
+
+# IDE
+.vscode/
+.idea/
+
+# Misc
+*.log
+.DS_Store
