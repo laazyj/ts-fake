@@ -1,6 +1,6 @@
 # ts-fake
 
-[![npm version](https://badge.fury.io/js/ts-fake.svg)](https://www.npmjs.com/package/ts-fake)
+[![npm version](https://img.shields.io/npm/v/ts-fake.svg)](https://www.npmjs.com/package/ts-fake)
 [![npm downloads](https://img.shields.io/npm/dm/ts-fake.svg)](https://www.npmjs.com/package/ts-fake)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![CI](https://github.com/laazyj/ts-fake/workflows/CI/badge.svg)](https://github.com/laazyj/ts-fake/actions)
