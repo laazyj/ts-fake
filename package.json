@@ -1,6 +1,6 @@
 {
   "name": "ts-fake",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Type-safe test utility for creating fakes of TypeScript interfaces and objects",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

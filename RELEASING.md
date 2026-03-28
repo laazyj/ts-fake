@@ -5,7 +5,7 @@ This project uses git tags to trigger automated releases via GitHub Actions. Whe
 ## Prerequisites
 
 - Push access to the `main` branch
-- `NPM_TOKEN` secret configured in GitHub repo settings (Settings > Secrets and variables > Actions)
+- Trusted Publishing configured on npmjs.com for the `ts-fake` package (linked to the `release.yml` workflow in the `laazyj/ts-fake` repo)
 
 ## Release Steps
 
@@ -28,5 +28,5 @@ This project uses git tags to trigger automated releases via GitHub Actions. Whe
 
 ## Troubleshooting
 
-- **Publish fails**: check that `NPM_TOKEN` is valid and has publish permissions.
+- **Publish fails**: check that Trusted Publishing is configured on npmjs.com for the `release.yml` workflow.
 - **Tag already exists**: delete it locally and remotely (`git tag -d v<version> && git push origin :refs/tags/v<version>`), fix the issue, then re-tag and push.
