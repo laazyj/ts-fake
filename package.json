@@ -15,6 +15,7 @@
   "files": [
     "dist",
     "README.md",
+    "CHANGELOG.md",
     "LICENSE"
   ],
   "scripts": {
@@ -27,6 +28,7 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"src/**/*.ts\" \"examples/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\" \"examples/**/*.ts\"",
+    "prerelease": "npm run lint && npm run format:check && npm run build && npm run test:coverage && npm run test:examples && tsc --noEmit",
     "prepublishOnly": "npm run build",
     "prepare": "husky"
   },
