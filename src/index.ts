@@ -1,7 +1,15 @@
 /**
  * Extend Partial<T> to support deep-partials.
+ *
+ * The function guard uses `never[]` rather than `unknown[]`: under
+ * strictFunctionTypes a function with typed parameters (e.g.
+ * `(x: boolean) => string`) is not assignable to `(...args: unknown[]) => unknown`,
+ * so it would fall through to the mapped branch and collapse to `{}`,
+ * losing type-checking on function-valued members. `never[]` (the bottom
+ * type, contravariantly assignable to any parameter list) matches every
+ * function, preserving it whole.
  */
-type DeepPartial<T> = T extends (...args: unknown[]) => unknown
+type DeepPartial<T> = T extends (...args: never[]) => unknown
   ? T
   : {
       [P in keyof T]?: DeepPartial<T[P]>;

@@ -25,7 +25,7 @@ export default [
     },
   },
   {
-    files: ["examples/**/*.ts"],
+    files: ["examples/**/*.ts", "test-d/**/*.ts"],
     ...tseslint.configs.disableTypeChecked,
   },
   {

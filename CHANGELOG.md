@@ -31,6 +31,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   Previously the types masqueraded as CommonJS under `import`, which
   could surface spurious type errors in ESM/`node16`/`nodenext`
   projects.
+- `fake<T>()` now type-checks function-valued members. The `DeepPartial`
+  function guard matched typed-parameter functions against
+  `(...args: unknown[]) => unknown`, which fails under `strictFunctionTypes`,
+  so such members collapsed to `{}` and accepted any value. They are now
+  preserved and checked against their declared signature.
 
 ## [1.0.0] - 2026-03-28
 
