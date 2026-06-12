@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Corrected the `exports` map so ESM consumers resolve ESM type
+  declarations (`index.d.mts`) instead of the CommonJS `index.d.ts`.
+  Previously the types masqueraded as CommonJS under `import`, which
+  could surface spurious type errors in ESM/`node16`/`nodenext`
+  projects.
+
 ### Changed
 
 - Upgraded build toolchain to TypeScript 6.x. Switched `moduleResolution`
