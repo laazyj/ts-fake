@@ -237,6 +237,17 @@ doSomething(user); // ✅ Works perfectly
 ✅ **Clear intent**: Shows exactly what the test depends on  
 ✅ **IDE support**: Full autocomplete and type checking
 
+## Compatibility
+
+| Tool           | Supported  | Verified in CI         |
+| -------------- | ---------- | ---------------------- |
+| **TypeScript** | `>=5.0.0`  | `5.0.2`¹ and `latest`  |
+| **Node.js**    | `>=20.0.0` | `20.x`, `22.x`, `24.x` |
+
+¹ TypeScript never published a `5.0.0`/`5.0.1` stable, so `5.0.2` is the lowest installable release in the supported range.
+
+TypeScript is a peer dependency — `ts-fake` uses whatever compiler (5.0+) your project already has. On every change, CI validates that the published type declarations resolve correctly across module systems ([are-the-types-wrong](https://github.com/arethetypeswrong/arethetypeswrong.github.io)) and type-checks the examples against both ends of the supported TypeScript range.
+
 ## Contributing
 
 Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
