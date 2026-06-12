@@ -54,3 +54,34 @@ jobs:
 
       - name: Check types
         run: npx tsc --noEmit
+
+  # Verifies the examples (a proxy for consumer code) compile against the
+  # floor and ceiling of the `typescript` peer range (>=5.0.0), guarding the
+  # compatibility we advertise to consumers rather than only the pinned
+  # build-time version exercised by the `build` job. 5.0.2 is the lowest
+  # published stable in the range (TypeScript never shipped a 5.0.0/5.0.1
+  # stable). The matrix TypeScript is run via npx so it never has to be
+  # reconciled into the locked dependency tree.
+  type-compat:
+    name: TypeScript compatibility (${{ matrix.typescript }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        typescript: ['5.0.2', 'latest']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Compile examples with TypeScript ${{ matrix.typescript }}
+        run: npx --yes --package typescript@${{ matrix.typescript }} tsc --project tsconfig.examples.json
