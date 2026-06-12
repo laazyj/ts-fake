@@ -88,3 +88,19 @@ jobs:
 
       - name: Compile examples with TypeScript ${{ matrix.typescript }}
         run: npx --yes --package typescript@${{ matrix.typescript }} tsc --project tsconfig.examples.json
+
+  # Lints the workflow files themselves: invalid syntax, bad expressions,
+  # deprecated runners, and shell issues in `run:` blocks (via the bundled
+  # shellcheck) — caught before they can silently break CI.
+  actionlint:
+    name: Lint workflows (actionlint)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run actionlint
+        # rhysd/actionlint:1.7.12 pinned by digest (third-party image)
+        uses: docker://rhysd/actionlint:1.7.12@sha256:b1934ee5f1c509618f2508e6eb47ee0d3520686341fec936f3b79331f9315667
+        with:
+          args: -color
