@@ -7,15 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-06-12
+
 ### Added
 
 - Continuous TypeScript compatibility checks for consumers. The published
   type declarations are validated for correct ESM/CJS resolution, and the
   example suite is compiled against both the lowest published release in
-  the supported `typescript` peer range (`5.0.2`) and the latest release
-  in CI —
-  guarding the compatibility advertised to consumers rather than only the
-  pinned build-time version.
+  the supported `typescript` peer range (`5.0.2`) and the latest release in
+  CI — guarding the compatibility advertised to consumers rather than only
+  the pinned build-time version.
 
 ### Changed
 
@@ -59,6 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - `DeepPartial<T>` type for deep partial support on nested objects
 - Dual CJS/ESM package distribution with TypeScript declarations
 
-[Unreleased]: https://github.com/laazyj/ts-fake/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/laazyj/ts-fake/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/laazyj/ts-fake/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/laazyj/ts-fake/compare/v0.1.0...v1.0.0
 [0.1.0]: https://github.com/laazyj/ts-fake/releases/tag/v0.1.0
