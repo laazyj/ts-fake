@@ -254,4 +254,4 @@ Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
 
 ## License
 
-MIT © [laazyj](https://github.com/laazyj)
+MIT © [Jason Duffett](https://github.com/laazyj)
