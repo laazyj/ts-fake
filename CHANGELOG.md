@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- Upgraded build toolchain to TypeScript 6.x. Switched `moduleResolution`
+  to `bundler` and set `ignoreDeprecations: "6.0"` to satisfy TypeScript
+  6.0 promoting deprecated-option warnings to hard errors. No change to
+  the published API or the `>=5.0.0` TypeScript peer range.
+
 ## [1.0.0] - 2026-03-28
 
 ### Changed
