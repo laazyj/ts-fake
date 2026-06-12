@@ -23,10 +23,20 @@ jobs:
       - run: npm ci
       - run: npm run prerelease
 
+      # Extract this version's section from CHANGELOG.md (fail before
+      # publishing if it is missing) to use as the GitHub Release body.
+      - name: Extract release notes from CHANGELOG
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          awk -v v="$version" 'index($0, "## [" v "]") == 1 {f=1; next} f && /^## \[/ {exit} f {print}' CHANGELOG.md > release-notes.md
+          test -s release-notes.md || { echo "::error::No CHANGELOG section found for v$version"; exit 1; }
+          echo "Release notes for v$version:"
+          cat release-notes.md
+
       - name: Publish to npm
         run: npm publish --provenance
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          generate_release_notes: true
+          body_path: release-notes.md
