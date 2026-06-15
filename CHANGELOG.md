@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Security
+
+- Forced the transitive `esbuild` dependency to `^0.28.1` via an `overrides`
+  entry, patching two high-severity advisories
+  ([GHSA-gv7w-rqvm-qjhr](https://github.com/advisories/GHSA-gv7w-rqvm-qjhr),
+  [GHSA-g7r4-m6w7-qqqr](https://github.com/advisories/GHSA-g7r4-m6w7-qqqr))
+  affecting esbuild `<= 0.28.0`. The `tsx` path resolved on its own, but
+  `tsup` pins `esbuild: ^0.27.0` and is unmaintained, so the override is the
+  durable fix until the build migrates off tsup (#32). Dev-dependency only;
+  no change to the published package.
+
 ## [1.1.0] - 2026-06-12
 
 ### Added
