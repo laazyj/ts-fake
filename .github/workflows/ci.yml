@@ -13,22 +13,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    # `continue-on-error` is driven per-entry by `matrix.experimental` so a
-    # single matrix can mix blocking and non-blocking versions. Node 26 is not
-    # yet GA (stable ~Oct 2026), so it runs as a non-blocking signal: a red
-    # Node 26 won't fail the overall check. `fail-fast: false` stops a Node 26
-    # failure from cancelling the supported versions. Once Node 26 is GA and
-    # stable here, drop it from `include` and add 26.x to `node-version`.
     strategy:
-      fail-fast: false
       matrix:
-        node-version: [20.x, 22.x, 24.x]
-        experimental: [false]
-        include:
-          - node-version: 26.x
-            experimental: true
-
-    continue-on-error: ${{ matrix.experimental }}
+        node-version: [20.x, 22.x, 24.x, 26.x]
 
     steps:
       - uses: actions/checkout@v4
