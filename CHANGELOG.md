@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- Lowered the supported `typescript` peer-dependency floor from `>=5.0.0` to
+  `>=4.7.0` ([#31](https://github.com/laazyj/ts-fake/issues/31)). 4.7 is the
+  first release with stable resolution of the package's `exports`-conditioned
+  type declarations under `node16`/`nodenext`, which is what actually gates
+  the floor — the library's language features have been valid far longer. No
+  change to the published API or build output; this only widens the range of
+  TypeScript versions consumers may use.
+
+### Added
+
+- A consumer-style TypeScript compatibility check for the floor. CI now
+  compiles fixtures that import the package by name under `node16` module
+  resolution on TypeScript `4.7.2` (the lowest installable 4.7 release),
+  resolving the published `exports` map and its per-condition `types` exactly
+  as a consumer would. The existing `bundler`-resolution example compile is
+  retained for `5.0.2` and `latest`, and the `exports` map continues to be
+  validated by are-the-types-wrong.
+
 ### Security
 
 - Forced the transitive `esbuild` dependency to `^0.28.1` via an `overrides`
