@@ -122,7 +122,7 @@ Add support for nested object fakes
 - Check if the issue already exists before creating a new one
 - Provide a clear description and reproduction steps
 - Include TypeScript and Node.js versions
-- Minimum supported versions: TypeScript 5.0+, Node.js 22+
+- Minimum supported versions: TypeScript 4.7+, Node.js 20+
 
 ## Questions?
 

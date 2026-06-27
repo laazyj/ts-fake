@@ -9,6 +9,9 @@ tests/
 # Examples
 examples/
 
+# Compatibility fixtures
+compat/
+
 # Configuration
 tsconfig.json
 .github/

@@ -29,13 +29,14 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:examples": "tsc --project tsconfig.examples.json",
+    "test:compat": "tsc --project tsconfig.compat.json",
     "test:types": "tsd",
     "check:exports": "attw --pack .",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write \"src/**/*.ts\" \"examples/**/*.ts\" \"test-d/**/*.ts\"",
-    "format:check": "prettier --check \"src/**/*.ts\" \"examples/**/*.ts\" \"test-d/**/*.ts\"",
-    "prerelease": "npm run lint && npm run format:check && npm run build && npm run check:exports && npm run test:coverage && npm run test:examples && npm run test:types && tsc --noEmit",
+    "format": "prettier --write \"src/**/*.ts\" \"examples/**/*.ts\" \"test-d/**/*.ts\" \"compat/**/*.{ts,mts,cts}\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"examples/**/*.ts\" \"test-d/**/*.ts\" \"compat/**/*.{ts,mts,cts}\"",
+    "prerelease": "npm run lint && npm run format:check && npm run build && npm run check:exports && npm run test:coverage && npm run test:examples && npm run test:compat && npm run test:types && tsc --noEmit",
     "prepublishOnly": "npm run build",
     "prepare": "husky"
   },
@@ -68,7 +69,7 @@
     "node": ">=20.0.0"
   },
   "peerDependencies": {
-    "typescript": ">=5.0.0"
+    "typescript": ">=4.7.0"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.3",

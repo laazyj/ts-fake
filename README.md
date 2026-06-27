@@ -6,7 +6,7 @@
 [![CI](https://github.com/laazyj/ts-fake/workflows/CI/badge.svg)](https://github.com/laazyj/ts-fake/actions)
 [![Coverage](https://codecov.io/gh/laazyj/ts-fake/branch/main/graph/badge.svg)](https://codecov.io/gh/laazyj/ts-fake)
 [![Bundle Size](https://img.shields.io/bundlephobia/minzip/ts-fake)](https://bundlephobia.com/package/ts-fake)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-4.7+-blue.svg)](https://www.typescriptlang.org/)
 
 Type-safe test utility for creating fakes of TypeScript interfaces and objects in unit tests.
 
@@ -239,14 +239,15 @@ doSomething(user); // ✅ Works perfectly
 
 ## Compatibility
 
-| Tool           | Supported  | Verified in CI         |
-| -------------- | ---------- | ---------------------- |
-| **TypeScript** | `>=5.0.0`  | `5.0.2`¹ and `latest`  |
-| **Node.js**    | `>=20.0.0` | `20.x`, `22.x`, `24.x` |
+| Tool           | Supported  | Verified in CI                       |
+| -------------- | ---------- | ------------------------------------ |
+| **TypeScript** | `>=4.7.0`  | `4.7.2`¹, `5.0.2`² and `latest`      |
+| **Node.js**    | `>=20.0.0` | `20.x`, `22.x`, `24.x`, `26.x`       |
 
-¹ TypeScript never published a `5.0.0`/`5.0.1` stable, so `5.0.2` is the lowest installable release in the supported range.
+¹ `4.7` is the floor because stable resolution of the package's `exports`-conditioned type declarations (`node16`/`nodenext`) landed in TypeScript 4.7. `4.7.2` is the lowest installable release (no `4.7.0`/`4.7.1` stable was published).
+² TypeScript never published a `5.0.0`/`5.0.1` stable, so `5.0.2` is the lowest installable release at that point in the range.
 
-TypeScript is a peer dependency — `ts-fake` uses whatever compiler (5.0+) your project already has. On every change, CI validates that the published type declarations resolve correctly across module systems ([are-the-types-wrong](https://github.com/arethetypeswrong/arethetypeswrong.github.io)) and type-checks the examples against both ends of the supported TypeScript range.
+TypeScript is a peer dependency — `ts-fake` uses whatever compiler (4.7+) your project already has. On every change, CI validates that the published type declarations resolve correctly across module systems ([are-the-types-wrong](https://github.com/arethetypeswrong/arethetypeswrong.github.io)). It also type-checks consumer fixtures that import the package by name under `node16` resolution at the `4.7` floor — exercising the `exports` map exactly as a consumer would — and compiles the examples under `bundler` resolution against the top of the range.
 
 ## Contributing
 
