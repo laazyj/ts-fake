@@ -35,11 +35,12 @@ jobs:
       - name: Check formatting
         run: npm run format:check
 
-      # The build toolchain (tsdown) requires Node >= 22.18, so the build and
-      # the exports check that depends on its output only run on Node >= 22.
-      # The library itself still supports Node >= 20 for consumers — that is
-      # exercised by the test/type steps below, which run against the source
-      # on every matrix version (including 20.x).
+      # The build toolchain (tsdown) requires Node >= 22.18. The build, the
+      # exports check, and the tsd assertions all consume the built `dist/`
+      # output, so they only run on Node >= 22. The library itself still
+      # supports Node >= 20 for consumers; that is exercised by the runtime
+      # tests, example compilation, and type-check below, which run against
+      # the source on every matrix version (including 20.x).
       - name: Build
         if: matrix.node-version != '20.x'
         run: npm run build
@@ -60,6 +61,7 @@ jobs:
         run: npm run test:examples
 
       - name: Check type assertions (tsd)
+        if: matrix.node-version != '20.x'
         run: npm run test:types
 
       - name: Check types
