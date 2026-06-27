@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-06-27
+
 ### Changed
 
 - Lowered the supported `typescript` peer-dependency floor from `>=5.0.0` to
@@ -103,7 +105,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - `DeepPartial<T>` type for deep partial support on nested objects
 - Dual CJS/ESM package distribution with TypeScript declarations
 
-[Unreleased]: https://github.com/laazyj/ts-fake/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/laazyj/ts-fake/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/laazyj/ts-fake/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/laazyj/ts-fake/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/laazyj/ts-fake/compare/v0.1.0...v1.0.0
 [0.1.0]: https://github.com/laazyj/ts-fake/releases/tag/v0.1.0
