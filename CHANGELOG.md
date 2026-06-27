@@ -26,17 +26,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   as a consumer would. The existing `bundler`-resolution example compile is
   retained for `5.0.2` and `latest`, and the `exports` map continues to be
   validated by are-the-types-wrong.
+- Migrated the build from [tsup](https://github.com/egoist/tsup) (no longer
+  maintained) to [tsdown](https://tsdown.dev/) (Rolldown + oxc). The build
+  still emits the same dual CJS/ESM output (`dist/index.js`, `dist/index.mjs`)
+  with separate type declarations (`dist/index.d.ts`, `dist/index.d.mts`), and
+  `are-the-types-wrong` stays green across node10/node16/bundler. tsup
+  hardcoded a deprecated `baseUrl` in its `.d.ts` build, which forced the
+  `ignoreDeprecations: "6.0"` workaround in `tsconfig.build.json` and would
+  stop working under TypeScript 7.0; tsdown does not, so both the workaround
+  and `tsconfig.build.json` have been removed. No change to the published API
+  or the `>=5.0.0` TypeScript peer range (#32).
 
 ### Security
 
-- Forced the transitive `esbuild` dependency to `^0.28.1` via an `overrides`
-  entry, patching two high-severity advisories
+- Removed the temporary `overrides.esbuild` entry that forced the transitive
+  `esbuild` to `^0.28.1`. It existed only to lift the stale `esbuild: ^0.27.0`
+  range pinned by the now-removed, unmaintained `tsup` past two high-severity
+  advisories
   ([GHSA-gv7w-rqvm-qjhr](https://github.com/advisories/GHSA-gv7w-rqvm-qjhr),
   [GHSA-g7r4-m6w7-qqqr](https://github.com/advisories/GHSA-g7r4-m6w7-qqqr))
-  affecting esbuild `<= 0.28.0`. The `tsx` path resolved on its own, but
-  `tsup` pins `esbuild: ^0.27.0` and is unmaintained, so the override is the
-  durable fix until the build migrates off tsup (#32). Dev-dependency only;
-  no change to the published package.
+  affecting esbuild `<= 0.28.0`. tsdown builds on Rolldown/oxc rather than
+  esbuild, and the remaining transitive esbuild (via `tsx`/`vite`) already
+  resolves to the patched `0.28.1`, so the override is no longer needed.
+  Dev-dependency only; no change to the published package (#32).
 
 ## [1.1.0] - 2026-06-12
 

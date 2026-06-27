@@ -25,6 +25,14 @@ Thanks for your interest in contributing to ts-fake! This document provides guid
 
 ## Development Setup
 
+> **Node.js ≥ 22 is required to build.** The build toolchain
+> ([tsdown](https://tsdown.dev/)) requires Node `^22.18.0 || >=24.11.0`, so
+> `npm run build` (and the `check:exports` / `test:types` checks that depend
+> on its output) must be run on Node 22 or newer. The repo's `.nvmrc` pins
+> Node 22 — run `nvm use` to match. Note this is a *contributor* requirement
+> only: the published package itself supports Node ≥ 20 for consumers (see
+> `engines.node` in `package.json`).
+
 ```bash
 # Install dependencies
 npm install
