@@ -60,6 +60,10 @@ jobs:
       - name: Check examples compile
         run: npm run test:examples
 
+      - name: Check consumer fixtures compile (node16 / exports map)
+        if: matrix.node-version != '20.x'
+        run: npm run test:compat
+
       - name: Check type assertions (tsd)
         if: matrix.node-version != '20.x'
         run: npm run test:types
@@ -84,6 +88,15 @@ jobs:
   #     which is what pins the floor. 4.7.2 is the lowest published stable.
   # The fixtures resolve against the built `dist`, so the package is built
   # first (with the pinned toolchain — the matrix TS only resolves + checks).
+  #
+  # `7` (the native-port compiler) is pinned rather than left to the floating
+  # `latest` leg: `latest` only ever proves the newest major, so a pinned leg
+  # is what keeps 7 covered the day 8 ships. Until then the two are knowingly
+  # redundant — that overlap is the cost of the insurance, and `latest` stays
+  # on as the canary for whatever ships next. 6.x, the toolchain the package
+  # is built with, needs no leg here: the `build` job exercises it directly.
+  # That toolchain cannot move to 7 yet — typescript-eslint 8.x refuses to
+  # load against it — which is why the matrix runs ahead of the devDependency.
   type-compat:
     name: TypeScript compatibility (${{ matrix.label }})
     runs-on: ubuntu-latest
@@ -97,6 +110,12 @@ jobs:
             tsconfig: tsconfig.compat.json
           - label: '5.0.2 / bundler'
             typescript: '5.0.2'
+            tsconfig: tsconfig.examples.json
+          - label: '7.x / node16'
+            typescript: '7'
+            tsconfig: tsconfig.compat.json
+          - label: '7.x / bundler'
+            typescript: '7'
             tsconfig: tsconfig.examples.json
           - label: 'latest / bundler'
             typescript: 'latest'

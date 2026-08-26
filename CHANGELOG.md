@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Explicit TypeScript `7.x` legs in the CI compatibility matrix, under both
+  `node16` and `bundler` resolution
+  ([#59](https://github.com/laazyj/ts-fake/issues/59)). The library already
+  compiled and ran correctly under TypeScript 7 — no source, declaration or
+  packaging change was needed — but that rested on the floating `latest` leg,
+  which stops proving 7 the day 8 ships.
+- The `test:compat` consumer fixtures now run in CI on every push and pull
+  request, not only in the `prerelease` chain on a tag push. They are the only
+  check that resolves the published `exports` map under `node16`, so a
+  regression there previously surfaced mid-release rather than on the PR.
+
 ## [1.2.0] - 2026-06-27
 
 ### Changed
