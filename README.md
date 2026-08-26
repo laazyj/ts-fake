@@ -239,13 +239,14 @@ doSomething(user); // ✅ Works perfectly
 
 ## Compatibility
 
-| Tool           | Supported  | Verified in CI                       |
-| -------------- | ---------- | ------------------------------------ |
-| **TypeScript** | `>=4.7.0`  | `4.7.2`¹, `5.0.2`² and `latest`      |
-| **Node.js**    | `>=20.0.0` | `20.x`, `22.x`, `24.x`, `26.x`       |
+| Tool           | Supported  | Verified in CI                          |
+| -------------- | ---------- | --------------------------------------- |
+| **TypeScript** | `>=4.7.0`  | `4.7.2`¹, `5.0.2`², `7.x`³ and `latest` |
+| **Node.js**    | `>=20.0.0` | `20.x`, `22.x`, `24.x`, `26.x`          |
 
 ¹ `4.7` is the floor because stable resolution of the package's `exports`-conditioned type declarations (`node16`/`nodenext`) landed in TypeScript 4.7. `4.7.2` is the lowest installable release (no `4.7.0`/`4.7.1` stable was published).
 ² TypeScript never published a `5.0.0`/`5.0.1` stable, so `5.0.2` is the lowest installable release at that point in the range.
+³ Pinned to the major so the check keeps covering TypeScript 7 once `latest` moves past it. The `6.x` toolchain the package is built with needs no entry of its own — the build job runs the same example, consumer-fixture and type checks against it.
 
 TypeScript is a peer dependency — `ts-fake` uses whatever compiler (4.7+) your project already has. On every change, CI validates that the published type declarations resolve correctly across module systems ([are-the-types-wrong](https://github.com/arethetypeswrong/arethetypeswrong.github.io)). It also type-checks consumer fixtures that import the package by name under `node16` resolution at the `4.7` floor — exercising the `exports` map exactly as a consumer would — and compiles the examples under `bundler` resolution against the top of the range.
 
