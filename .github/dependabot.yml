@@ -7,3 +7,11 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+    groups:
+      # vitest and its `@vitest/*` siblings pin each other with exact-version
+      # peer ranges, so bumped separately neither PR can install (`npm ci`
+      # fails ERESOLVE). They must move as one update.
+      vitest:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
