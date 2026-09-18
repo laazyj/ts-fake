@@ -19,6 +19,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   request, not only in the `prerelease` chain on a tag push. They are the only
   check that resolves the published `exports` map under `node16`, so a
   regression there previously surfaced mid-release rather than on the PR.
+- A `consumer-smoke` CI job, and the `npm run test:smoke` behind it, which
+  install the packed tarball into a throwaway fixture and load it on every
+  supported Node version — 20.x included
+  ([#77](https://github.com/laazyj/ts-fake/issues/77)). It asserts that the
+  `require` and `import` conditions resolve to `dist/index.js` and
+  `dist/index.mjs` respectively, which is what catches a condition collapsing
+  onto the other build: Node loads the CJS bundle through `import` without
+  error, so that failure is otherwise silent. This is the first check to
+  execute the published artifact rather than `src/`, and so the first to
+  actually verify the `engines: >=20` range. It is in the `prerelease` chain,
+  which is what `release.yml` runs immediately before `npm publish`.
+- `compat/smoke.mjs` as the runtime sibling of the existing `compat/consumer`
+  fixtures: those cover the `types` conditions of the `exports` map under
+  `tsc`, this one covers the `default` conditions under Node.
 
 ### Changed
 

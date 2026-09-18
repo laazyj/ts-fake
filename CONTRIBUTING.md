@@ -52,6 +52,9 @@ npm run test:coverage
 # Check examples compile
 npm run test:examples
 
+# Install the packed tarball and load it as a consumer would
+npm run test:smoke
+
 # Run linter
 npm run lint
 
