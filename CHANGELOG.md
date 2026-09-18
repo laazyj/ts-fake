@@ -20,6 +20,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   check that resolves the published `exports` map under `node16`, so a
   regression there previously surfaced mid-release rather than on the PR.
 
+### Changed
+
+- Upgraded `vitest` and `@vitest/coverage-v8` to `5.x`. The two are released
+  in lockstep and pin each other with an exact-version peer range, so they are
+  now grouped in `dependabot.yml` and bump as a single PR — bumped separately
+  neither one can install (`npm ci` fails `ERESOLVE`), which is what broke
+  [#71](https://github.com/laazyj/ts-fake/pull/71) and
+  [#72](https://github.com/laazyj/ts-fake/pull/72).
+- The test and coverage-upload steps now run only on Node >= 22, alongside the
+  build, exports and tsd steps already gated there, following vitest 5's
+  `^22.12.0 || ^24.0.0 || >=26.0.0` floor. The 20.x leg continues to run lint,
+  formatting, example compilation and the type-check.
+  **The supported Node range for consumers is unchanged at `>=20.0.0`** — this
+  is a devDependency floor, and `fake()` uses no Node API. The gaps this
+  exposed in what the Node matrix actually verifies are tracked in
+  [#77](https://github.com/laazyj/ts-fake/issues/77).
+- Renamed `vitest.config.ts` to `vitest.config.mts`. Vite 8 (via vitest 5)
+  warns that ESM syntax in a config loaded as CommonJS is unsupported by the
+  native config loader it plans to make the default.
+
 ## [1.2.0] - 2026-06-27
 
 ### Changed
