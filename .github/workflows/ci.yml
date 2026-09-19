@@ -9,13 +9,76 @@ on:
 permissions:
   contents: read
 
+# Supersede in-progress runs on a PR; keep pushes to main intact.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
+  # Host-independent work: lint, format and every tsc/tsd run give the same
+  # result on any Node, so they run once on the pinned toolchain. Also packs
+  # the tarball that `consumer-smoke` and `type-compat` consume.
   build:
+    name: Build and static checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Use Node.js (pinned toolchain)
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Build
+        run: npm run build
+
+      - name: Check package exports (are-the-types-wrong)
+        run: npm run check:exports
+
+      - name: Check examples compile
+        run: npm run test:examples
+
+      - name: Check consumer fixtures compile (node16 / exports map)
+        run: npm run test:compat
+
+      - name: Check type assertions (tsd)
+        run: npm run test:types
+
+      - name: Check types
+        run: npx tsc --noEmit
+
+      - name: Pack the publishable tarball
+        run: mkdir -p pack && npm pack --pack-destination ./pack
+
+      - name: Upload the tarball
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: package-tarball
+          path: pack/*.tgz
+          if-no-files-found: error
+          retention-days: 1
+
+  # Runs the suite against `src/` on each Node the toolchain supports. vitest 5
+  # declares `^22.12.0 || ^24.0.0 || >=26.0.0`, which sets the floor here.
+  test:
+    name: Test (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
-        node-version: [20.x, 22.x, 24.x, 26.x]
+        node-version: [22.x, 24.x, 26.x]
 
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
@@ -29,71 +92,20 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint
-        run: npm run lint
-
-      - name: Check formatting
-        run: npm run format:check
-
-      # tsdown requires Node >= 22.18 and vitest 5 declares
-      # `^22.12.0 || ^24.0.0 || >=26.0.0`, so the build, exports check, test
-      # run and tsd assertions are gated to Node >= 22.
-      #
-      # `engines` still declares >= 20 for consumers: these are devDependency
-      # floors, not a consumer constraint. The `consumer-smoke` job below is
-      # what verifies that claim, on every supported Node version.
-      - name: Build
-        if: matrix.node-version != '20.x'
-        run: npm run build
-
-      - name: Check package exports (are-the-types-wrong)
-        if: matrix.node-version != '20.x'
-        run: npm run check:exports
-
-      # Packed once and handed to `consumer-smoke`. The 22.x pin must name a
-      # leg of the matrix above, or nothing is uploaded and that job fails on
-      # a missing artifact.
-      - name: Pack the publishable tarball
-        if: matrix.node-version == '22.x'
-        run: mkdir -p pack && npm pack --pack-destination ./pack
-
-      - name: Upload the tarball for the consumer smoke tests
-        if: matrix.node-version == '22.x'
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: package-tarball
-          path: pack/*.tgz
-          if-no-files-found: error
-          retention-days: 1
-
       - name: Run tests with coverage
-        if: matrix.node-version != '20.x'
         run: npm run test:coverage
 
+      # One upload is enough: the report is identical on every leg.
       - name: Upload coverage reports to Codecov
-        if: matrix.node-version != '20.x'
+        if: matrix.node-version == '22.x'
         uses: codecov/codecov-action@0fb7174895f61a3b6b78fc075e0cd60383518dac # v5.5.5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
-      - name: Check examples compile
-        run: npm run test:examples
-
-      - name: Check consumer fixtures compile (node16 / exports map)
-        if: matrix.node-version != '20.x'
-        run: npm run test:compat
-
-      - name: Check type assertions (tsd)
-        if: matrix.node-version != '20.x'
-        run: npm run test:types
-
-      - name: Check types
-        run: npx tsc --noEmit
-
   # The only job that runs the published artifact: it installs the packed
   # tarball into a throwaway fixture, so Node itself resolves the `files` list
   # and the `exports` map as a consumer would. This is what backs the
-  # `engines: >=20` claim. Node versions must match the `build` matrix above.
+  # `engines: >=20` claim, so this matrix tracks `engines`, not the toolchain.
   consumer-smoke:
     name: Consumer smoke (Node ${{ matrix.node-version }})
     needs: build
@@ -137,8 +149,9 @@ jobs:
   #     and its per-condition `types` exactly as a node16/nodenext consumer
   #     would. Stable `exports`-conditioned type resolution landed in TS 4.7,
   #     which is what pins the floor. 4.7.2 is the lowest published stable.
-  # The fixtures resolve against the built `dist`, so the package is built
-  # first (with the pinned toolchain — the matrix TS only resolves + checks).
+  # The node16 fixtures resolve against `dist`, taken from the `build` job's
+  # tarball; the bundler legs compile `examples/` against `src/`. Each leg
+  # therefore installs or downloads only what its own tsconfig reads.
   #
   # `7` (the native-port compiler) is pinned rather than left to the floating
   # `latest` leg: `latest` only ever proves the newest major, so a pinned leg
@@ -150,6 +163,7 @@ jobs:
   # load against it — which is why the matrix runs ahead of the devDependency.
   type-compat:
     name: TypeScript compatibility (${{ matrix.label }})
+    needs: build
     runs-on: ubuntu-latest
 
     strategy:
@@ -178,17 +192,32 @@ jobs:
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
-      - name: Use Node.js
+      - name: Use Node.js (pinned toolchain)
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          node-version: 22.x
+          node-version-file: .nvmrc
           cache: 'npm'
 
+      # Only the bundler legs need an install: tsconfig.json sets
+      # `types: ["node"]`. tsconfig.compat.json sets `types: []` and resolves
+      # the package by self-name, so it needs nothing but `dist`.
       - name: Install dependencies
+        if: matrix.tsconfig == 'tsconfig.examples.json'
         run: npm ci
 
-      - name: Build package (provides dist for exports-map resolution)
-        run: npm run build
+      - name: Download the packed tarball
+        if: matrix.tsconfig == 'tsconfig.compat.json'
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: package-tarball
+          path: pack
+
+      - name: Restore dist from the tarball
+        if: matrix.tsconfig == 'tsconfig.compat.json'
+        run: |
+          tar -xzf pack/*.tgz package/dist
+          mv package/dist dist
+          rm -rf package
 
       - name: Type-check with TypeScript ${{ matrix.typescript }} (${{ matrix.tsconfig }})
         run: npx --yes --package typescript@${{ matrix.typescript }} tsc --project ${{ matrix.tsconfig }}
