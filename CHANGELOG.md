@@ -7,52 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-### Added
-
-- Explicit TypeScript `7.x` legs in the CI compatibility matrix, under both
-  `node16` and `bundler` resolution
-  ([#59](https://github.com/laazyj/ts-fake/issues/59)). The library already
-  compiled and ran correctly under TypeScript 7 — no source, declaration or
-  packaging change was needed — but that rested on the floating `latest` leg,
-  which stops proving 7 the day 8 ships.
-- The `test:compat` consumer fixtures now run in CI on every push and pull
-  request, not only in the `prerelease` chain on a tag push. They are the only
-  check that resolves the published `exports` map under `node16`, so a
-  regression there previously surfaced mid-release rather than on the PR.
-- A `consumer-smoke` CI job, and the `npm run test:smoke` behind it, which
-  install the packed tarball into a throwaway fixture and load it on every
-  supported Node version — 20.x included
-  ([#77](https://github.com/laazyj/ts-fake/issues/77)). It asserts that the
-  `require` and `import` conditions resolve to `dist/index.js` and
-  `dist/index.mjs` respectively, which is what catches a condition collapsing
-  onto the other build: Node loads the CJS bundle through `import` without
-  error, so that failure is otherwise silent. This is the first check to
-  execute the published artifact rather than `src/`, and so the first to
-  actually verify the `engines: >=20` range. It is in the `prerelease` chain,
-  which is what `release.yml` runs immediately before `npm publish`.
-- `compat/smoke.mjs` as the runtime sibling of the existing `compat/consumer`
-  fixtures: those cover the `types` conditions of the `exports` map under
-  `tsc`, this one covers the `default` conditions under Node.
-
-### Changed
-
-- Upgraded `vitest` and `@vitest/coverage-v8` to `5.x`. The two are released
-  in lockstep and pin each other with an exact-version peer range, so they are
-  now grouped in `dependabot.yml` and bump as a single PR — bumped separately
-  neither one can install (`npm ci` fails `ERESOLVE`), which is what broke
-  [#71](https://github.com/laazyj/ts-fake/pull/71) and
-  [#72](https://github.com/laazyj/ts-fake/pull/72).
-- The test and coverage-upload steps now run only on Node >= 22, alongside the
-  build, exports and tsd steps already gated there, following vitest 5's
-  `^22.12.0 || ^24.0.0 || >=26.0.0` floor. The 20.x leg continues to run lint,
-  formatting, example compilation and the type-check.
-  **The supported Node range for consumers is unchanged at `>=20.0.0`** — this
-  is a devDependency floor, and `fake()` uses no Node API. The gaps this
-  exposed in what the Node matrix actually verifies are tracked in
-  [#77](https://github.com/laazyj/ts-fake/issues/77).
-- Renamed `vitest.config.ts` to `vitest.config.mts`. Vite 8 (via vitest 5)
-  warns that ESM syntax in a config loaded as CommonJS is unsupported by the
-  native config loader it plans to make the default.
+<!-- Library changes only: features and bug fixes that affect what consumers
+     install. CI, build tooling and devDependency bumps are not release notes
+     and do not belong here. -->
 
 ## [1.2.0] - 2026-06-27
 
