@@ -8,12 +8,17 @@
  * losing type-checking on function-valued members. `never[]` (the bottom
  * type, contravariantly assignable to any parameter list) matches every
  * function, preserving it whole.
+ *
+ * `unknown` and `any` are returned unchanged; mapping over them would
+ * collapse `unknown` to `{}`, rejecting `unknown` values. See #90.
  */
-type DeepPartial<T> = T extends (...args: never[]) => unknown
+type DeepPartial<T> = unknown extends T
   ? T
-  : {
-      [P in keyof T]?: DeepPartial<T[P]>;
-    };
+  : T extends (...args: never[]) => unknown
+    ? T
+    : {
+        [P in keyof T]?: DeepPartial<T[P]>;
+      };
 
 /**
  * Return a fake object of type T that implements only the members required by the test.

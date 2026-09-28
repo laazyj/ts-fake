@@ -26,3 +26,15 @@ expectError(fake<User>({ nope: true }));
 // typed function is accepted, a return-type mismatch is rejected.
 fake<User>({ greet: () => "hi" });
 expectError(fake<User>({ greet: () => 42 }));
+
+// `unknown` fields accept `unknown` values, including via index signatures
+// (#90).
+interface WithUnknown {
+  data: unknown;
+  params: Record<string, unknown>;
+}
+const unknownValue: unknown = 1;
+const unknownRecord: Record<string, unknown> = { a: 1 };
+fake<WithUnknown>({ data: unknownValue });
+fake<WithUnknown>({ params: unknownRecord });
+expectType<unknown>(fake<unknown>(unknownValue));

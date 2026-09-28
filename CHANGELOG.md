@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
      install. CI, build tooling and devDependency bumps are not release notes
      and do not belong here. -->
 
+### Fixed
+
+- Fields typed `unknown` (including `Record<string, unknown>` values) now
+  accept `unknown` values instead of only `{} | undefined`
+  ([#90](https://github.com/laazyj/ts-fake/issues/90)).
+
 ## [1.2.0] - 2026-06-27
 
 ### Changed
