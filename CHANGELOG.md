@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
      install. CI, build tooling and devDependency bumps are not release notes
      and do not belong here. -->
 
+## [1.2.1] - 2026-09-28
+
 ### Fixed
 
 - Fields typed `unknown` (including `Record<string, unknown>` values) now
@@ -115,7 +117,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - `DeepPartial<T>` type for deep partial support on nested objects
 - Dual CJS/ESM package distribution with TypeScript declarations
 
-[Unreleased]: https://github.com/laazyj/ts-fake/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/laazyj/ts-fake/compare/v1.2.1...HEAD
+[1.2.1]: https://github.com/laazyj/ts-fake/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/laazyj/ts-fake/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/laazyj/ts-fake/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/laazyj/ts-fake/compare/v0.1.0...v1.0.0
