@@ -19,3 +19,20 @@ updates:
         patterns:
           - "vitest"
           - "@vitest/*"
+
+  # Keep the SHA-pinned actions in the workflows current.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    # Wait a week after a release before proposing it, so a compromised or
+    # yanked version has time to be caught upstream first.
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
