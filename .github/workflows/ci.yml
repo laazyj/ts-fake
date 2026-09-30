@@ -24,6 +24,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
 
       - name: Use Node.js (pinned toolchain)
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
@@ -60,6 +62,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
 
       - name: Use Node.js (pinned toolchain)
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
@@ -118,6 +122,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
 
       # No `npm ci`: the harness uses only Node builtins and the npm CLI.
       - name: Use Node.js ${{ matrix.node-version }}
@@ -191,6 +197,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
 
       - name: Use Node.js (pinned toolchain)
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
@@ -222,6 +230,22 @@ jobs:
       - name: Type-check with TypeScript ${{ matrix.typescript }} (${{ matrix.tsconfig }})
         run: npx --yes --package typescript@${{ matrix.typescript }} tsc --project ${{ matrix.tsconfig }}
 
+  # Security audit of the workflows and dependabot config.
+  zizmor:
+    name: Audit workflows (zizmor)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+
+      - name: Run zizmor
+        uses: zizmorcore/zizmor-action@cc914d7f3750a2d13d75c7f184a1060aa0e9d482 # v0.6.4
+        with:
+          advanced-security: false
+          annotations: true
+
   # Lints the workflow files themselves: invalid syntax, bad expressions,
   # deprecated runners, and shell issues in `run:` blocks (via the bundled
   # shellcheck) — caught before they can silently break CI.
@@ -231,6 +255,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
 
       - name: Run actionlint
         # rhysd/actionlint:1.7.12 pinned by digest (third-party image)

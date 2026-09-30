@@ -77,6 +77,16 @@ This project uses Husky and lint-staged to automatically lint and format code be
 
 You don't need to manually run lint/format before committing - the hooks handle it automatically.
 
+### GitHub Actions audit (optional)
+
+The hook also runs [zizmor](https://docs.zizmor.sh/), which checks the workflows and `dependabot.yml` for security issues, if it's installed (otherwise it skips with a note). CI runs it on every PR, so installing it catches findings before you push:
+
+```bash
+brew install zizmor   # or: pipx install zizmor
+```
+
+Run it by hand with `zizmor --offline .`. Fix findings rather than suppressing them. If one really is a false positive, add an inline `# zizmor: ignore[<audit>]` comment that says why.
+
 ## Guidelines
 
 ### Code Style

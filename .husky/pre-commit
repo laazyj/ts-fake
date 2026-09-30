@@ -1,1 +1,8 @@
 npx lint-staged
+
+# GitHub Actions audit (optional locally; the zizmor CI job is the gate).
+if command -v zizmor >/dev/null 2>&1; then
+  zizmor --offline --quiet .
+else
+  echo "pre-commit: zizmor not found in PATH, skipping the Actions audit." >&2
+fi
