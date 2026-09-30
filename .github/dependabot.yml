@@ -7,6 +7,10 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+    # Wait a week after a release before proposing it, so a compromised or
+    # yanked version has time to be caught upstream first.
+    cooldown:
+      default-days: 7
     groups:
       # vitest and its `@vitest/*` siblings pin each other with exact-version
       # peer ranges, so bumped separately neither PR can install (`npm ci`
