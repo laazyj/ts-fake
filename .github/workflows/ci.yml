@@ -166,7 +166,8 @@ jobs:
   # on as the canary for whatever ships next. 6.x, the toolchain the package
   # is built with, needs no leg here: the `build` job exercises it directly.
   # That toolchain cannot move to 7 yet — typescript-eslint 8.x refuses to
-  # load against it — which is why the matrix runs ahead of the devDependency.
+  # load against it — which is why the matrix runs ahead of the devDependency
+  # (#79).
   type-compat:
     name: TypeScript compatibility (${{ matrix.label }})
     needs: build

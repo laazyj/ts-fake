@@ -19,6 +19,10 @@ updates:
         patterns:
           - "vitest"
           - "@vitest/*"
+    # typescript-eslint 8.x does not support TS 7.0 (#79).
+    ignore:
+      - dependency-name: "typescript"
+        versions: ["7.0.x"]
 
   # Keep the SHA-pinned actions in the workflows current.
   - package-ecosystem: "github-actions"
